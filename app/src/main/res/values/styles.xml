@@ -34,11 +34,10 @@
     <!-- Style for a word/translation line -->
     <style name="ListItemStyle">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/list_item_height</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:padding">16dp</item>
-        <item name="android:colorBackground">@color/category_numbers</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:background">@color/tan_background</item>
+        <item name="android:minHeight">@dimen/list_item_height</item>
     </style>
 
 </resources>

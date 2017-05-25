@@ -9,19 +9,23 @@ public class Word {
     private String miwokWord;
     private String defaultWord;
     private int imageResourceId = NO_IMAGE_PROVIDED;
+    private int audioResouceId = NO_AUDIO_PROVIDED;
     private static final int NO_IMAGE_PROVIDED = -1;
+    private static final int NO_AUDIO_PROVIDED = -1;
 
-    public Word(String defaultWord, String miwokWord)
+    public Word(String defaultWord, String miwokWord, int audioResouceId)
     {
         this.miwokWord = miwokWord;
         this.defaultWord = defaultWord;
+        this.audioResouceId = audioResouceId;
     }
 
-    public Word(String defaultWord,String miwokWord, int imageResourceId)
+    public Word(String defaultWord,String miwokWord, int imageResourceId, int audioResouceId)
     {
         this.miwokWord = miwokWord;
         this.defaultWord = defaultWord;
         this.imageResourceId = imageResourceId;
+        this.audioResouceId = audioResouceId;
     }
 
     public void setMiwokWord(String miwokWord) {
@@ -52,4 +56,25 @@ public class Word {
         return imageResourceId != NO_IMAGE_PROVIDED;
     }
 
+    public int getAudioResouceId(){
+        return audioResouceId;
+    }
+
+    public void setAudioResouceId(int audioResouceId){
+        this.audioResouceId = audioResouceId;
+    }
+
+    public boolean hasAudioResourseId(){
+        return audioResouceId != NO_AUDIO_PROVIDED;
+    }
+
+    @Override
+    public String toString() {
+        return "Word{" +
+                "miwokWord='" + miwokWord + '\'' +
+                ", defaultWord='" + defaultWord + '\'' +
+                ", imageResourceId=" + imageResourceId +
+                ", audioResouceId=" + audioResouceId +
+                '}';
+    }
 }

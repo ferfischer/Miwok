@@ -15,17 +15,11 @@
  */
 package com.example.android.miwok;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
-
-import static com.example.android.miwok.R.id.colors;
-import static com.example.android.miwok.R.id.family;
-import static com.example.android.miwok.R.id.numbers;
-import static com.example.android.miwok.R.id.phrases;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,55 +27,29 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         // Set the content of the activity to use the activity_main.xml layout file
         setContentView(R.layout.activity_main);
 
-        TextView tvNumbers = (TextView) findViewById(numbers);
+        // Find the view pager that will allow the user to swipe between fragments
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
 
-        tvNumbers.setOnClickListener(new View.OnClickListener() {
-                                         @Override
-                                         public void onClick(View view) {
-                                             Intent numbersIntent = new Intent(MainActivity.this, NumbersActivity.class);
-                                             startActivity(numbersIntent);
-                                         }
-                                     }
-        );
+        // Create an adapter that knows which fragment should be shown on each page
+        CategoryAdapter adapter = new CategoryAdapter(getSupportFragmentManager(), this);
 
+        // Set the adapter onto the view pager
+        viewPager.setAdapter(adapter);
 
-        TextView tvColors = (TextView) findViewById(colors);
+        // Ache o layout da aba que mostra as abas
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
 
-        tvColors.setOnClickListener(new View.OnClickListener() {
-                                         @Override
-                                         public void onClick(View view) {
-                                             Intent colorsIntent = new Intent(MainActivity.this, ColorsActivity.class);
-                                             startActivity(colorsIntent);
-                                         }
-                                     }
-        );
+        // Conecte o layout da aba com o view pager. Isto irá
+        //   1. Atualizar o layout da aba quando o view pager for deslizado
+        //   2. Atualizar o view pager quando uma aba for selecionada
+        //   3. Definir os nomes da aba do layout da aba com os títulos do adapter do view pager
+        //      chamando onPageTitle()
+        tabLayout.setupWithViewPager(viewPager);
 
-
-        TextView tvFamily = (TextView) findViewById(family);
-
-        tvFamily.setOnClickListener(new View.OnClickListener() {
-                                         @Override
-                                         public void onClick(View view) {
-                                             Intent familyIntent = new Intent(MainActivity.this, FamilyActivity.class);
-                                             startActivity(familyIntent);
-                                         }
-                                     }
-        );
-
-
-        TextView tvPhrases = (TextView) findViewById(phrases);
-
-        tvPhrases.setOnClickListener(new View.OnClickListener() {
-                                         @Override
-                                         public void onClick(View view) {
-                                             Intent phrasesIntent = new Intent(MainActivity.this, PhrasesActivity.class);
-                                             startActivity(phrasesIntent);
-                                         }
-                                     }
-        );
         Log.v("MainActivity", "onCreate");
     }
 

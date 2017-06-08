@@ -1,22 +1,45 @@
 package com.example.android.miwok;
 
+
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 
-public class PhrasesActivity extends AppCompatActivity {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class NumbersFragment extends Fragment {
 
     MediaPlayer mMediaPlayer;
 
     private AudioManager mAudioManager;
+
+    public NumbersFragment() {
+        // Required empty public constructor
+    }
+
+    /**
+     * This listener gets triggered when the {@link MediaPlayer} has completed
+     * playing the audio file.
+     */
+    private MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
+        @Override
+        public void onCompletion(MediaPlayer mediaPlayer) {
+            // Now that the sound file has finished playing, release the media player resources.
+            releaseMediaPlayer();
+        }
+    };
+
     /**
      * This listener gets triggered whenever the audio focus changes
      * (i.e., we gain or lose audio focus because of another app or device).
@@ -41,43 +64,31 @@ public class PhrasesActivity extends AppCompatActivity {
             } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
                 // The AUDIOFOCUS_LOSS case means we've lost audio focus and
                 // Stop playback and clean up resources
-                releaseMediaPlayer(mMediaPlayer);
+                releaseMediaPlayer();
             }
-        }
-    };
-    /**
-     * This listener gets triggered when the {@link MediaPlayer} has completed
-     * playing the audio file.
-     */
-    private MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
-        @Override
-        public void onCompletion(MediaPlayer mediaPlayer) {
-            // Now that the sound file has finished playing, release the media player resources.
-            releaseMediaPlayer(mMediaPlayer);
         }
     };
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.word_list);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.word_list, container, false);
 
         /* Usando arraylist of Word */
         final ArrayList<Word> words = new ArrayList<Word>();
-        words.add(new Word("Where are you going?", "minto wuksus", R.raw.phrase_where_are_you_going));
-        words.add(new Word("What is your name?", "tinnә oyaase'nә", R.raw.phrase_what_is_your_name));
-        words.add(new Word("My name is...", "oyaaset...", R.raw.phrase_my_name_is));
-        words.add(new Word("How are you feeling?", "michәksәs?", R.raw.phrase_how_are_you_feeling));
-        words.add(new Word("I’m feeling good.", "kuchi achit", R.raw.phrase_im_feeling_good));
-        words.add(new Word("Are you coming?", "әәnәs'aa?", R.raw.phrase_are_you_coming));
-        words.add(new Word("Yes, I’m coming.", "hәә’ әәnәm", R.raw.phrase_yes_im_coming));
-        words.add(new Word("I’m coming.", "әәnәm", R.raw.phrase_im_coming));
-        words.add(new Word("Let’s go.", "yoowutis", R.raw.phrase_lets_go));
-        words.add(new Word("Come here.", "әnni'nem", R.raw.phrase_come_here));
+        words.add(new Word("one", "lutti", R.drawable.number_one, R.raw.number_one));
+        words.add(new Word("two", "otiiko", R.drawable.number_two, R.raw.number_two));
+        words.add(new Word("three", "tolookosu", R.drawable.number_three, R.raw.number_three));
+        words.add(new Word("four", "oyyisa", R.drawable.number_four, R.raw.number_four));
+        words.add(new Word("five", "massokka", R.drawable.number_five, R.raw.number_five));
+        words.add(new Word("six", "temmokka", R.drawable.number_six, R.raw.number_six));
+        words.add(new Word("seven", "kenekaku", R.drawable.number_seven, R.raw.number_seven));
+        words.add(new Word("eight", "kawinta", R.drawable.number_eight, R.raw.number_eight));
+        words.add(new Word("nine", "wo'e", R.drawable.number_nine, R.raw.number_nine));
+        words.add(new Word("ten", "na'aacha", R.drawable.number_ten, R.raw.number_ten));
 
-        WordAdapter adapter = new WordAdapter(this, words, R.color.category_phrases);
+        WordAdapter adapter = new WordAdapter(getActivity(), words, R.color.category_numbers);
 
-        ListView listView = (ListView) findViewById(R.id.list);
+        ListView listView = (ListView) rootView.findViewById(R.id.list);
 
         // Estabelecer um click listener para reproduzir o áudio quando o item da lista é clicado
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -86,13 +97,13 @@ public class PhrasesActivity extends AppCompatActivity {
                 // Obter {@link Word} objeto em uma posição dada em que o usuário clicou
                 Word word = words.get(position);
 
-                Log.v("NumbersActivity", "Current word: " + word);
+                Log.v("NumbersFragment", "Current word: " + word);
 
                 // Antes de iniciar, libera os recursos usados pelo media player se estiverem em uso
-                releaseMediaPlayer(mMediaPlayer);
+                releaseMediaPlayer();
 
 
-                mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                mAudioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
 
 
                 // Request audio focus for playback
@@ -106,7 +117,7 @@ public class PhrasesActivity extends AppCompatActivity {
 
                     // Create and setup the {@link MediaPlayer} for the audio resource associated
                     // with the current word
-                    mMediaPlayer = MediaPlayer.create(PhrasesActivity.this, word.getAudioResouceId());
+                    mMediaPlayer = MediaPlayer.create(getActivity(), word.getAudioResouceId());
 
                     // Start the audio file
                     mMediaPlayer.start();
@@ -114,18 +125,22 @@ public class PhrasesActivity extends AppCompatActivity {
                     // Setup a listener on the media player, so that we can stop and release the
                     // media player once the sound has finished playing.
                     mMediaPlayer.setOnCompletionListener(mCompletionListener);
+
                 }
+
 
             }
         });
 
         listView.setAdapter(adapter);
+
+        return rootView;
     }
 
     /**
      * Clean up the media player by releasing its resources.
      */
-    private void releaseMediaPlayer(MediaPlayer mMediaPlayer) {
+    private void releaseMediaPlayer() {
         // If the media player is not null, then it may be currently playing a sound.
         if (mMediaPlayer != null) {
             // Regardless of the current state of the media player, release its resources
@@ -144,9 +159,8 @@ public class PhrasesActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
-        releaseMediaPlayer(mMediaPlayer);
+        releaseMediaPlayer();
     }
-
 }
